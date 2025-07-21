@@ -1,0 +1,32 @@
+name: myapp-test
+services:
+- name: web
+  source_dir: /
+  github:
+    repo: your-username/myapp-test
+    branch: main
+  run_command: |
+    php artisan config:cache
+    php artisan route:cache
+    php artisan view:cache
+    php artisan migrate --force
+    heroku-php-apache2 public/
+  environment_slug: php
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  routes:
+  - path: /
+  health_check:
+    http_path: /
+  envs:
+  - key: APP_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+  - key: DATABASE_URL
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+databases:
+- name: db
+  engine: PG
+  version: "13"
+  size: db-s-dev-database
