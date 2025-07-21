@@ -4,7 +4,7 @@ FROM php:8.3-fpm
 # Set working directory
 WORKDIR /var/www/html
 
-# Install system dependencies
+# Install system dependencies and newer Node.js
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -14,11 +14,11 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     libpq-dev \
-    nodejs \
-    npm \
     nginx \
     supervisor \
     netcat-openbsd \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -37,14 +37,14 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 # Copy package files
 COPY package*.json ./
 
-# Install Node dependencies
-RUN npm ci --only=production
+# Install Node dependencies (including devDependencies for build)
+RUN npm ci
 
 # Copy application code
 COPY . .
 
 # Build frontend assets
-RUN npm run build
+RUN npm run build && npm prune --production
 
 # Run remaining composer scripts
 RUN composer dump-autoload --optimize
