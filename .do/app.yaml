@@ -2,20 +2,12 @@ name: myapp-test
 services:
 - name: web
   source_dir: /
+  dockerfile_path: Dockerfile
   github:
-    repo: your-username/myapp-test
+    repo: giorgigordiashvili/myapp-test
     branch: main
-  build_command: |
-    composer install --no-dev --optimize-autoloader --no-interaction
-    npm ci
-    npm run build
-    php artisan config:cache
-    php artisan route:cache
-    php artisan view:cache
-  run_command: |
-    php artisan migrate --force
-    vendor/bin/heroku-php-nginx -C nginx.conf public/
-  environment_slug: php
+    deploy_on_push: true
+  http_port: 80
   instance_count: 1
   instance_size_slug: basic-xxs
   routes:
