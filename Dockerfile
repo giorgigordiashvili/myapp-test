@@ -32,7 +32,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY composer.json composer.lock ./
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Copy package files
 COPY package*.json ./
@@ -47,7 +47,7 @@ COPY . .
 RUN npm run build && npm prune --production
 
 # Run remaining composer scripts
-RUN composer dump-autoload --optimize
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --optimize
 
 # Create necessary directories and set permissions
 RUN mkdir -p /var/www/html/storage/logs \

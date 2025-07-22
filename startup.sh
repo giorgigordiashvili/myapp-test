@@ -52,6 +52,15 @@ else
     echo "APP_KEY is already set"
 fi
 
+# Ensure autoloader is properly generated
+echo "Regenerating autoloader..."
+export COMPOSER_ALLOW_SUPERUSER=1
+composer dump-autoload --optimize --no-dev || echo "Composer autoload failed, continuing..."
+
+# Test autoloader
+echo "Testing autoloader..."
+php -r "require_once '/var/www/html/vendor/autoload.php'; echo 'Autoloader: SUCCESS\n';" || echo "Autoloader: FAILED"
+
 # Create SQLite database file if using SQLite
 if [ "$DB_CONNECTION" = "sqlite" ]; then
     echo "Creating SQLite database..."
