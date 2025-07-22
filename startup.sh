@@ -23,6 +23,12 @@ echo "Environment variables:"
 echo "APP_ENV: $APP_ENV"
 echo "APP_DEBUG: $APP_DEBUG" 
 echo "DB_CONNECTION: $DB_CONNECTION"
+
+# Temporarily enable debug mode for troubleshooting
+if [ "$APP_ENV" = "production" ] && [ -z "$FORCE_DEBUG" ]; then
+    echo "Temporarily enabling debug mode for 500 error troubleshooting..."
+    export APP_DEBUG=true
+fi
 if [ ! -z "$DB_HOST" ]; then
     echo "DB_HOST: $DB_HOST"
     echo "DB_PORT: $DB_PORT"
