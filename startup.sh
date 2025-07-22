@@ -110,6 +110,25 @@ php artisan --version || {
     exit 1
 }
 
+# Test basic web functionality
+echo "Testing web server configuration..."
+php -S localhost:8080 -t public/ > /dev/null 2>&1 &
+TEST_PID=$!
+sleep 2
+
+# Test if we can reach the info page
+curl -f http://localhost:8080/info.php > /tmp/info_test.txt 2>/dev/null && {
+    echo "Web server test: SUCCESS"
+    cat /tmp/info_test.txt
+} || {
+    echo "Web server test: FAILED"
+    echo "Testing direct PHP execution..."
+    php public/info.php || echo "Direct PHP execution failed"
+}
+
+# Kill the test server
+kill $TEST_PID 2>/dev/null || true
+
 echo "Laravel is ready!"
 echo "Starting services..."
 
