@@ -19,9 +19,10 @@ services:
     value: production
     scope: RUN_AND_BUILD_TIME
   - key: APP_DEBUG
-    value: "false"
+    value: "true"
     scope: RUN_AND_BUILD_TIME
   - key: APP_KEY
+    value: "base64:lbYh1d8PZ7IH8gYvXn8JFb8iCvv7GOyt0A3bqWtwcpM="
     scope: RUN_AND_BUILD_TIME
     type: SECRET
   - key: DB_CONNECTION
@@ -53,7 +54,10 @@ services:
     value: database
     scope: RUN_AND_BUILD_TIME
   - key: LOG_CHANNEL
-    value: errorlog
+    value: stderr
+    scope: RUN_AND_BUILD_TIME
+  - key: LOG_LEVEL
+    value: debug
     scope: RUN_AND_BUILD_TIME
 databases:
 - name: db
