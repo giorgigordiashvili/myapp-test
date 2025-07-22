@@ -73,7 +73,11 @@ if [ "$DB_CONNECTION" = "sqlite" ]; then
     mkdir -p /var/www/html/database
     touch /var/www/html/database/database.sqlite
     chmod 664 /var/www/html/database/database.sqlite
-    echo "SQLite database created"
+    chown www-data:www-data /var/www/html/database/database.sqlite
+    # Also ensure the database directory is writable
+    chown www-data:www-data /var/www/html/database
+    chmod 775 /var/www/html/database
+    echo "SQLite database created with proper permissions"
 fi
 
 # Test database connection
@@ -97,6 +101,16 @@ php artisan migrate --force || {
 }
 
 echo "Migrations completed successfully"
+
+# Fix SQLite permissions after migrations
+if [ "$DB_CONNECTION" = "sqlite" ] && [ -f "/var/www/html/database/database.sqlite" ]; then
+    echo "Fixing SQLite database permissions after migration..."
+    chown www-data:www-data /var/www/html/database/database.sqlite
+    chmod 664 /var/www/html/database/database.sqlite
+    chown www-data:www-data /var/www/html/database
+    chmod 775 /var/www/html/database
+    echo "SQLite permissions fixed"
+fi
 
 # Clear and cache configuration
 echo "Caching configuration..."

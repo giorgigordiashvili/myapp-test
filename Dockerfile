@@ -55,9 +55,11 @@ RUN mkdir -p /var/www/html/storage/logs \
     /var/www/html/storage/framework/sessions \
     /var/www/html/storage/framework/views \
     /var/www/html/bootstrap/cache \
+    /var/www/html/database \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+    && chmod -R 755 /var/www/html/bootstrap/cache \
+    && chmod 775 /var/www/html/database
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/sites-available/default
